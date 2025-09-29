@@ -1,0 +1,109 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quote of the day</title>
+    <style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: system-ui, sans-serif;
+    }
+
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: #fff;
+    }
+
+    .quote-box {
+        background: #222;
+        padding: 30px;
+        border-radius: 16px;
+        max-width: 600px;
+        text-align: center;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+    }
+
+    .quote-box h2 {
+        font-size: 24px;
+        margin-bottom: 20px;
+        color: #a5b4fc;
+        letter-spacing: 1px;
+    }
+
+    blockquote {
+        font-size: 22px;
+        font-weight: 500;
+        margin-bottom: 15px;
+        line-height: 1.4;
+        position: relative;
+    }
+
+    blockquote::before,
+    blockquote::after {
+        content: '"';
+        font-size: 28px;
+        color: #a78bfa;
+    }
+
+    #author {
+        display: block;
+        margin-bottom: 25px;
+        font-size: 16px;
+        font-style: italic;
+        color: #d1d5db;
+    }
+
+    button {
+        background: #6366f1;
+        color: #fff;
+        border: none;
+        padding: 10px 18px;
+        font-size: 16px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background 0.25s, transform 0.2s;
+    }
+
+    button:hover {
+        background: #4f46e5;
+        transform: scale(1.05);
+    }
+    </style>
+</head>
+<body>
+    <div class="quote-box">
+        <h2>Quote of the day</h2>
+        <blockquote id="quote"></blockquote>
+        <span id="author"></span>
+        <div>
+            <button id="new-quote">New Quote</button>
+        </div>
+    </div>
+
+<script>
+    async function getQuote() {
+        try {
+            const response = await fetch("{% url 'random_quote' %}");
+            const data = await response.json();
+            document.getElementById("quote").textContent = data.text;
+            document.getElementById("author").textContent = "— " + data.author;
+        } catch (error) {
+            console.error("Ошибка загрузки цитаты:", error);
+        }
+    }
+
+    // первая цитата сразу при загрузке
+    getQuote();
+
+    // обработчик на кнопку
+    document.getElementById("new-quote").addEventListener("click", getQuote);
+</script>
+</body>
+</html>
